@@ -9,21 +9,33 @@ char* names[ARRAY_SIZE];
 char* numbers[ARRAY_SIZE];
 int i = 0;
 
+void readLine();
 void add();
 void find();
 void status();
 void _remove();
 void freeAll();
 
+void readLine(char* buffer) {
+	char c;
+	int j = 0;
+	
+	while((c = getchar()) != '\n') {
+		buffer[j++] = c;
+	}
+	
+	buffer[j] = '\0';
+}
+
 void add() {
 	char buffer1[BUFFER_SIZE];
 	char buffer2[BUFFER_SIZE];
 	
 	printf("name : ");
-	scanf("%s", buffer1);
+	readLine(buffer1);
 	
 	printf("number : ");
-	scanf("%s", buffer2);
+	readLine(buffer2);
 	
 	names[i] = strdup(buffer1);
 	numbers[i] = strdup(buffer2);
@@ -36,7 +48,7 @@ void find() {
 	char buffer[BUFFER_SIZE];
 	
 	printf("name : ");
-	scanf("%s", buffer);
+	readLine(buffer);
 	
 	int j;
 	for(j=0; j<i; j++) {
@@ -63,7 +75,7 @@ void _remove() {
 	char buffer[BUFFER_SIZE];
 	
 	printf("name : ");
-	scanf("%s", buffer);
+	readLine(buffer);
 	
 	int j;
 	for(j=0; j<i; j++) {
@@ -95,7 +107,7 @@ int main() {
 	
 	while(1) {
 		printf("$ ");
-		scanf("%s", command);
+		readLine(command);
 		
 		if(strcmp(command, "add") == 0) {
 			add();
