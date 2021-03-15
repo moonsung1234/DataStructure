@@ -11,8 +11,6 @@ char* readLineWithoutSpace(char* buffer) {
 		if(c != ' ' || (i > 0 && buffer[i - 1] != ' ')) {
 			buffer[i++] = c;	
 		}
-		
-		printf("%d\n", i);
 	}
 	
 	if(buffer[i - 1] == ' ') {
