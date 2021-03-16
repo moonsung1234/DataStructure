@@ -193,8 +193,6 @@ void process() {
 				continue;
 			}
 			
-			printf("%s\n", argument1);
-			
 			read(argument1);
 		
 		} else if(strcmp(command, "add") == 0) {
