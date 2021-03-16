@@ -1,2 +1,5 @@
 # hide exe files
 *.exe
+
+# hide txt files
+*.txt
