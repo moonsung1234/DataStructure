@@ -3,3 +3,6 @@
 
 # hide txt files
 *.txt
+
+# hide out files
+*.out
