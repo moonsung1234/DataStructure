@@ -1,8 +1,9 @@
 
 #include <stdio.h>
+#include <ctype.h>
 #include <string.h>
 
-#define DEFAULT_SIZE 1
+#define DEFAULT_SIZE 3
 #define BUFFER_SIZE 100
 
 typedef struct Person {
@@ -14,6 +15,7 @@ typedef struct Person {
 
 void readLine(FILE* fp, char* buffer);
 int search(char* name);
+int checkSpace(char* buffer);
 void init();
 void remalloc();
 void read(char* file_name);
@@ -25,7 +27,7 @@ void save();
 void process();
 void freeAll();
 
-ps* persons;
+ps** persons;
 int size = DEFAULT_SIZE;
 int i = 0;
 
@@ -49,7 +51,7 @@ void readLine(FILE* fp, char* buffer) {
 int search(char* name) {
 	int j;
 	for(j=0; j<i; j++) {
-		if(strcmp(name, persons[j].name) == 0) {
+		if(strcmp(name, persons[j]->name) == 0) {
 			return j;
 		}
 	}
@@ -57,14 +59,28 @@ int search(char* name) {
 	return -1;
 }
 
+int checkSpace(char* buffer) {
+	char* pointer = buffer;
+	
+	while((*pointer) != '\0') {
+		if(!isspace(*pointer)) {
+			return 0;
+		}
+		
+		pointer++;
+	}
+	
+	return 1;
+}
+
 void init() {
-	persons = (ps*)malloc(DEFAULT_SIZE * sizeof(ps));
+	persons = (ps**)malloc(DEFAULT_SIZE * sizeof(ps*));
 }
 
 void remalloc() {
 	if(i >= size) {
 		size += DEFAULT_SIZE;
-		ps* temp_persons = (ps*)malloc(size * sizeof(ps));
+		ps** temp_persons = (ps**)malloc(size * sizeof(ps*));
 		
 		int j;
 		for(j=0; j<i; j++) {
@@ -92,13 +108,13 @@ void read(char* file_name) {
 		return;
 	}
 	
-	while(1) {
+	while(!feof(fp)) {
 		readLine(fp, buffer);
 		
-		if(strlen(buffer) <= 0) {
+		if(strlen(buffer) <= 0 || checkSpace(buffer) == 1) {
 			break;
 		}
-		
+				
 		name = strtok(buffer, "#");
 		number = strtok(NULL, "#");
 		email = strtok(NULL, "#");
@@ -115,15 +131,16 @@ void add(char* name, char* number, char* email, char* group) {
 		
 	// sort
 	int j = i - 1;
-	while(j >= 0 && strcmp(name, persons[j].name) > 0) {
+	while(j >= 0 && strcmp(name, persons[j]->name) > 0) {
 		persons[j + 1] = persons[j];
 		j--;
 	}
 	
-	persons[j + 1].name = strdup(name);
-	persons[j + 1].number = strdup(number);
-	persons[j + 1].email = strdup(email);
-	persons[j + 1].group = strdup(group);
+	persons[j + 1] = (ps*)malloc(sizeof(ps));
+	persons[j + 1]->name = strdup(name);
+	persons[j + 1]->number = strdup(number);
+	persons[j + 1]->email = strdup(email);
+	persons[j + 1]->group = strdup(group);
 	i++;
 	
 	printf("%s was added successfully.\n", name);
@@ -136,17 +153,17 @@ void find(char* name) {
 		printf("No person named '%s' exists.\n", name);
 	
 	} else {
-		printf("%s\n%s\n%s\n", persons[index].number, persons[index].email, persons[index].group);
+		printf("%s\n%s\n%s\n", persons[index]->number, persons[index]->email, persons[index]->group);
 	}
 }
 
 void status() {
 	int j;
 	for(j=0; j<i; j++) {
-		printf("%s : %s\n", "name", persons[j].name);
-		printf("%s : %s\n", "number", persons[j].number);
-		printf("%s : %s\n", "email", persons[j].email);
-		printf("%s : %s\n", "group", persons[j].group);
+		printf("name : %s\n", persons[j]->name);
+		printf("number : %s\n", persons[j]->number);
+		printf("email : %s\n", persons[j]->email);
+		printf("group : %s\n", persons[j]->group);
 	}
 	
 	printf("Total %d persons.\n", i);
@@ -182,10 +199,10 @@ void save(char* file_name) {
 	
 	int j;
 	for(j=0; j<i; j++) {
-		fprintf(fp, "%s#", persons[j].name);
-		fprintf(fp, "%s#", persons[j].number);
-		fprintf(fp, "%s#", persons[j].email);
-		fprintf(fp, "%s#\n", persons[j].group);
+		fprintf(fp, "%s#", persons[j]->name);
+		fprintf(fp, "%s#", persons[j]->number);
+		fprintf(fp, "%s#", persons[j]->email);
+		fprintf(fp, "%s#\n", persons[j]->group);
 	}
 	
 	fclose(fp);
@@ -275,6 +292,15 @@ void process() {
 }
 
 void freeAll() {
+	int j;
+	for(j=0; j<i; j++) {
+		free(persons[j]->name);
+		free(persons[j]->number);
+		free(persons[j]->email);
+		free(persons[j]->group);
+		free(persons[j]);
+	}
+	
 	free(persons);
 }
 
