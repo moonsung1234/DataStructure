@@ -8,6 +8,19 @@ typedef struct Node {
 	struct Node* next;
 } node;
  
+void createHeadNode(char* data);
+void addBackNode(node* head, char* data);
+void addFrontNode(node** head, char* data);
+void addBetweenNode(node* prev, char* data);
+void addIndexedNode(node* head, int index, char* data);
+void removeFrontNode(node** head);
+void removeBetweenNode(node* prev);
+void removeIndexedNode(node* head, int index);
+void removeHaddataNode(node* head, char* data);
+node* findNamedNode(node* head, char* name);
+node* findIndexedNode(node* head, int index);
+void freeAll(node* head);
+
 node* head = NULL;
 
 void createHeadNode(char* data) {
@@ -43,6 +56,17 @@ void addBetweenNode(node* prev, char* data) {
 	prev->next = temp;
 }
 
+void addIndexedNode(node* head, int index, char* data) {
+	if(index == 0) {
+		addFrontNode(&head, data);
+
+		return;
+	}
+
+	node* after_node = findIndexedNode(head, index - 1);
+	addBetweenNode(after_node, data);
+}
+
 void removeFrontNode(node** head) {
 	node* next_node = (*head)->next;
 
@@ -60,6 +84,35 @@ void removeBetweenNode(node* prev) {
 	free(next_node);
 }
 
+void removeIndexedNode(node* head, int index) {
+	if(index == 0) {
+		removeFrontNode(&head);
+
+		return;
+	}
+
+	node* after_node = findIndexedNode(head, index - 1);
+	removeBetweenNode(after_node);
+}
+
+void removeHaddataNode(node* head, char* data) {
+	node* after_node = NULL;
+	node* pointer = head;
+
+	while(pointer != NULL && strcmp(data, pointer->data) != 0) {
+		after_node = pointer;
+		pointer = pointer->next;
+	}
+	
+	if(after_node == NULL) {
+		removeFrontNode(&head);
+		
+		return;
+	}
+
+	removeBetweenNode(after_node);
+}
+
 node* findNamedNode(node* head, char* name) {
 	node* pointer = head;
 
@@ -72,6 +125,17 @@ node* findNamedNode(node* head, char* name) {
 	}
 
 	return NULL;
+}
+
+node* findIndexedNode(node* head, int index) {
+	node* pointer = head;
+
+	int i;
+	for(i=0; i<index && pointer != NULL; i++) {
+		pointer = pointer->next;
+	}
+
+	return pointer;
 }
 
 void freeAll(node* head) {
@@ -90,10 +154,10 @@ void freeAll(node* head) {
 int main(void) {
 	// test flow
 	createHeadNode("original_head");
-	addBackNode(head, "node1");
-	removeFrontNode(&head);
-	addBetweenNode(head, "node0");
-	removeBetweenNode(head);
+	addIndexedNode(head, 1, "node_1");
+	addIndexedNode(head, 2, "node_2");
+	removeIndexedNode(head, 1);
+	removeHaddataNode(head, "node_2");
 
 	node* pointer = head;
 	
