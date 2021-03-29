@@ -65,5 +65,6 @@ void processCommand() {
 }
 
 void main() {
+    init();
     processCommand();
 }
