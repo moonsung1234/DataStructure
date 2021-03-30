@@ -28,8 +28,7 @@ void handleAdd() {
     path = strdup(buffer);
 
     addSong(artist, title, path);
-
-    printf("%s %s %s\n", artist, title, path);
+    status();
 }
 
 void processCommand() {
@@ -67,4 +66,5 @@ void processCommand() {
 void main() {
     init();
     processCommand();
+    freeAll();
 }

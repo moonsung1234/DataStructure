@@ -2,11 +2,14 @@
 #ifndef LIBRARY
 
 #define LIBRARY
+#define ARRAY_SIZE 256 // 2^8
 
-#define ARRAY_SIZE 200
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct song Song;
-typedef struct s_node SNode;
+typedef struct snode SNode;
 typedef struct artist Artist;
 
 struct song {
@@ -16,7 +19,7 @@ struct song {
     int index;
 };
 
-struct s_node {
+struct snode {
     SNode* next;
     SNode* prev;
     Song* song;
@@ -31,5 +34,7 @@ struct artist {
 
 void init();
 void addSong(char* artist, char* title, char* path);
+void status();
+void freeAll();
 
 #endif
