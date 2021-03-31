@@ -3,6 +3,7 @@
 
 #define LIBRARY
 #define ARRAY_SIZE 256 // 2^8
+#define BUFFER_SIZE 200
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +34,7 @@ struct artist {
 };
 
 void init();
+void load(FILE* fp);
 void addSong(char* artist, char* title, char* path);
 void status();
 void freeAll();

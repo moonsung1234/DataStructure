@@ -6,6 +6,27 @@
 
 #define BUFFER_SIZE 200
 
+void handleLoad() {
+    char buffer[BUFFER_SIZE];
+    
+    printf("Data file name : ");
+    
+    if(readLine(buffer) <= 0) {
+        return;
+    }
+
+    FILE* fp = fopen(buffer, "r");
+
+    if(fp == NULL) {
+        printf("No such file exists.\n");
+
+        return;
+    }
+
+    load(fp);
+    fclose(fp);
+}
+
 void handleAdd() {
     char buffer[BUFFER_SIZE];
     char* artist;
@@ -28,7 +49,6 @@ void handleAdd() {
     path = strdup(buffer);
 
     addSong(artist, title, path);
-    status();
 }
 
 void processCommand() {
@@ -52,6 +72,7 @@ void processCommand() {
         } else if(strcmp(command, "remove") == 0) {
 
         } else if(strcmp(command, "status") == 0) {
+            status();
 
         } else if(strcmp(command, "play") == 0) {
 
@@ -65,6 +86,7 @@ void processCommand() {
 
 void main() {
     init();
+    handleLoad();
     processCommand();
     freeAll();
 }

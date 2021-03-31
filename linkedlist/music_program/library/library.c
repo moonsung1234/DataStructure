@@ -12,6 +12,25 @@ void init() {
     }
 }
 
+void load(FILE* fp) {
+    char buffer[BUFFER_SIZE];
+    char* artist;
+    char* title;
+    char* path;
+
+    while(!feof(fp)) {
+        if(fgets(buffer, 1024, fp) <= 0) {
+            continue;
+        }
+
+        artist = strtok(buffer, "#");
+        title = strtok(NULL, "#");
+        path = strtok(NULL, "#");
+
+        printf("%s %s %s\n", artist, title, path);
+    }
+}
+
 Artist* findArtist(char* artist) {
     Artist* p = artist_arr[(unsigned char) artist[0]];
  
@@ -81,10 +100,12 @@ void insertNode(Artist* artist, SNode* snode) {
     
     } else if(p == artist->head) {
         snode->next = artist->head;
+        artist->head->prev = snode;
         artist->head = snode;
 
     } else if(p == NULL) {
         snode->prev = artist->tail;
+        artist->tail->next = snode;
         artist->tail = snode;
 
     } else {
@@ -127,9 +148,7 @@ void printArtist(Artist* artist) {
     SNode* snode = artist->head;
 
     while(snode != NULL) {
-        if(snode->song != NULL) {
-            printSong(snode->song);
-        }
+        printSong(snode->song);
 
         snode = snode->next;
     }
