@@ -27,6 +27,28 @@ void handleLoad() {
     fclose(fp);
 }
 
+void handleSearch() {
+    char artist[BUFFER_SIZE];
+    char title[BUFFER_SIZE];
+
+    printf("Artist : ");
+    
+    if(readLine(artist) <= 0) {
+        printf("Artist name required.\n");
+        
+        return;
+    }
+
+    printf("Title : ");
+    
+    if(readLine(title) <= 0) {
+        _searchSong(artist);
+        
+    } else {
+        searchSong(artist, title);
+    }
+}
+
 void handleAdd() {
     char buffer[BUFFER_SIZE];
     char* artist;
@@ -68,6 +90,7 @@ void processCommand() {
             handleAdd();
 
         } else if(strcmp(command, "search") == 0) {
+            handleSearch();
         
         } else if(strcmp(command, "remove") == 0) {
 

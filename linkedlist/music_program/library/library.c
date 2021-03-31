@@ -28,6 +28,7 @@ void load(FILE* fp) {
         path = strtok(NULL, "#");
 
         printf("%s %s %s\n", artist, title, path);
+        addSong(artist, title, path);
     }
 }
 
@@ -49,6 +50,33 @@ Artist* createArtist(char* artist) {
     created_artist->tail = NULL;
 
     return created_artist;
+}
+
+void _searchSong(char* artist) {
+
+}
+
+void searchSong(char* artist, char* title) {
+    Artist* finded_artist = findArtist(artist);
+
+    if(finded_artist == NULL) {
+        printf("No such artist exists.\n");
+
+        return;
+    }
+
+    SNode* p = finded_artist->head;
+
+    while(p != NULL && strcmp(title, p->song->title) < 0) {
+        p = p->next;
+    }
+
+    if(p != NULL && strcmp(title, p->song->title) == 0) {
+        printSong(p->song);
+    
+    } else {
+        printf("No such song exists.\n");
+    }
 }
 
 Artist* addArtist(char* artist) {
@@ -139,7 +167,7 @@ void addSong(char* artist, char* title, char* path) {
 }
 
 void printSong(Song* song) {
-    printf("%d %s %s\n", song->index, song->path, song->title);
+    printf("%d %s %s\n", song->index, song->title, song->path);
 }
 
 void printArtist(Artist* artist) {

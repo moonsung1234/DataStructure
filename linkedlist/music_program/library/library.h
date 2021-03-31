@@ -35,7 +35,10 @@ struct artist {
 
 void init();
 void load(FILE* fp);
+void _searchSong(char* artist);
+void searchSong(char* artist, char* title);
 void addSong(char* artist, char* title, char* path);
+void printSong(Song* song);
 void status();
 void freeAll();
 
